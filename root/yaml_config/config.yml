@@ -1,0 +1,35 @@
+name: yaml_config_file
+batch_size: 32
+main_path_to_data: /home/rain/dir_for_data/
+CustomDataset_settings:
+  img_dim: 
+    x: 224
+    y: 224
+architecture: ResNet
+network_settings:
+  in_channels: 1 #кол-во начальных каналов
+  num_channels: 128 #кол-во начальных свёрток
+  out_channels: 33 #выходные классы
+  kernel_size: 3 
+  padding: 1
+  stride: 1
+  block_type: 'bottleneck'
+  learning_setting:
+    learning_rate: 0.001
+    #betas: (0.9,0.999)
+    betas:
+      betas1: 0.9
+      betas2: 0.999
+  scheduler_settings:
+    gamma: 0.6
+  AMP_settings:
+    use_amp: 'True'
+  torch.backends.cudnn.benchmark: 'True'
+  torch.backends.cudnn.deterministic: 'False'
+  epochs: 10
+path_to_split_datasets:
+  train_dir: '/home/rain/Repositories/Untitled_Folder/split_data/train/'
+  val_dir: '/home/rain/Repositories/Untitled_Folder/split_data/val/'
+  test_dir: '/home/rain/Repositories/Untitled_Folder/split_data/test/'
+
+
