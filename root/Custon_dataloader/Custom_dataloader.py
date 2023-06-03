@@ -10,7 +10,7 @@ class CustomDataset(Dataset):
     path_to_data - где находятся папка с классами
     """
 
-    def __init__(self, path_to_data):
+    def __init__(self, path_to_data) -> None:
         self.imgs_path = path_to_data
         file_list = glob.glob(self.imgs_path + "*")
         file_list.sort()
@@ -26,10 +26,10 @@ class CustomDataset(Dataset):
 
         self.img_dim = (128, 128)
 
-    def __len__(self):
+    def __len__(self) -> int:
         return len(self.data)
 
-    def __getitem__(self, idx):
+    def __getitem__(self, idx: int) -> dict[str: torch.tensor, str: dict[str, int]]:
         img_path, class_name = self.data[idx]
         img = cv2.imread(img_path, cv2.IMREAD_GRAYSCALE)
         img = img.astype(np.float32)

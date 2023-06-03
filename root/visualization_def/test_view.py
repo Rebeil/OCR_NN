@@ -8,7 +8,8 @@ def view_2_grahic(data: tuple = None, сhart_name: str = 'None_name',
     """
     Args:
         data (tuple, optional): потери и точность. Defaults to None.\n
-        name_gra (str, optional): название графика. Defaults to 'None_name'.\n
+        сhart_name (str, optional) название графика. Defaults to 'None_name'.\n
+        type_NN (str, optional) тип нейронной сети. Defaults to 'None_name'.\n
         figsize (tuple, optional): размер фигуры. Defaults to (10,7).\n
         epochs (int, optional): кол-во эпох. Defaults to 9.\n
     Raises:
@@ -22,8 +23,8 @@ def view_2_grahic(data: tuple = None, сhart_name: str = 'None_name',
 
     fig.tight_layout(h_pad=2)
     # define subplot titles
-    ax[0].set_title('loss', fontsize=16)
-    ax[1].set_title('acc', fontsize=16)
+    ax[0].set_title('loss', fontsize=16) #avg_loss
+    ax[1].set_title('acc', fontsize=16) #avg_acc
 
     # add overall title and adjust it so that it doesn't overlap with subplot titles
     plt.subplots_adjust(wspace=0, hspace=0.8)

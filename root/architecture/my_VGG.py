@@ -3,10 +3,13 @@ import torch.nn as nn
 
 class VGG16(nn.Module):
     """
-    Args:
-        out_nc (int): Кол-во выходных классов
+        Args:
+            in_channels (int): кол-во каналов \n
+            num_channels (int): кол-вл свёрток \n
+            out_channels (int): кол-во выходных классов \n
     """
     def __init__(self,in_channels:int, num_channels:int, out_channels:int):
+    
         super().__init__()
 
         self.act = nn.ReLU(inplace=True)
@@ -34,9 +37,9 @@ class VGG16(nn.Module):
 
         self.flat = nn.Flatten()
 
-        self.fc1 = nn.Linear(128, 128)
+        self.fc1 = nn.Linear(num_channels, num_channels)
         # self.fc2 = nn.Linear(4096, 4096)
-        self.fc3 = nn.Linear(128, out_channels)
+        self.fc3 = nn.Linear(num_channels, out_channels)
 
     def forward(self, x):
         out = self.conv1_1(x)

@@ -1,14 +1,16 @@
 import torch.nn as nn
-#изменить страйд
+
+
+# изменить страйд?
 
 class ResBlock(nn.Module):
-    def __init__(self, num_channels):
+    def __init__(self, num_channels: int):
         super().__init__()
 
-        self.conv0 = nn.Conv2d(num_channels, num_channels, kernel_size=3, padding=1)
+        self.conv0 = nn.Conv2d(num_channels, num_channels, kernel_size=3, padding=1, stride=1)
         self.norm0 = nn.BatchNorm2d(num_channels)
         self.act = nn.LeakyReLU(0.2)
-        self.conv1 = nn.Conv2d(num_channels, num_channels, kernel_size=3, padding=1)
+        self.conv1 = nn.Conv2d(num_channels, num_channels, kernel_size=3, padding=1, stride=1)
         self.norm1 = nn.BatchNorm2d(num_channels)
 
     def forward(self, x):
@@ -64,10 +66,10 @@ class ResTruck(nn.Module):
 
 class PsevdoResNet(nn.Module):
     def __init__(self,
-                 in_channels:int,
-                 num_channels:int,
-                 out_channels:int,
-                 block_type:str='bottleneck'):
+                 in_channels: int,
+                 num_channels: int,
+                 out_channels: int,
+                 block_type: str = 'bottleneck'):
         super().__init__()
 
         self.conv0 = nn.Conv2d(in_channels, num_channels, kernel_size=3, stride=2)
