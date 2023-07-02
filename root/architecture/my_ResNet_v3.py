@@ -72,7 +72,7 @@ class ResTruck(nn.Module):
         return self.truck(x)
 
 
-class PsevdoResNet(nn.Module):
+class PsevdoResNet_with_dropout(nn.Module):
     def __init__(self,
                  in_channels: int = 1,
                  num_channels: int = 128,
@@ -89,10 +89,13 @@ class PsevdoResNet(nn.Module):
 
         self.layer1 = ResTruck(num_channels, 3, block_type=block_type)
         self.conv1 = nn.Conv2d(num_channels, 2 * num_channels, 3, padding=padding, stride=stride)
+        self.do1 = nn.Dropout(0.5)
         self.layer2 = ResTruck(2 * num_channels, 4, block_type=block_type)
         self.conv2 = nn.Conv2d(2 * num_channels, 4 * num_channels, 3, padding=padding, stride=stride)
+        self.do2 = nn.Dropout(0.1)
         self.layer3 = ResTruck(4 * num_channels, 6, block_type=block_type)
         self.conv3 = nn.Conv2d(4 * num_channels, 4 * num_channels, 3, padding=padding, stride=stride)
+        self.do3 = nn.Dropout(0.1)
         self.layer4 = ResTruck(4 * num_channels, 3, block_type=block_type)
 
         self.avgpool = nn.AdaptiveAvgPool2d((1, 1))
@@ -105,10 +108,13 @@ class PsevdoResNet(nn.Module):
         out = self.maxpool(out)
         out = self.layer1(out)
         out = self.conv1(out)
+        out = self.do1(out)
         out = self.layer2(out)
         out = self.conv2(out)
+        out = self.do2(out)
         out = self.layer3(out)
         out = self.conv3(out)
+        out = self.do3(out)
         out = self.layer4(out)
 
         out = self.avgpool(out)
@@ -117,27 +123,3 @@ class PsevdoResNet(nn.Module):
 
         return out
 
-
-# if __name__ == '__main__':
-#     from utils.visualization_model_arch import Convert_ONNX
-#
-#     # Let's build our model
-#     # train(5)
-#     # print('Finished Training')
-#
-#     # Test which classes performed well
-#     # testAccuracy()
-#
-#     # Let's load the model we just created and test the accuracy per label
-#     model = PsevdoResNet().eval()
-#     path = "/home/rain/vs_code/relize/saves_weights/ResNet/ResNet_in_ch_1_num_ch_128_out_ch_33_padding_1_stride_1_blk_bottleneck_lr_st_opt_name_AdamW_eps_1e-8_lr_0.001_bts1_0.9_bts2_0.999_w_dc_0.001_schr_g_0.6_amp_True_bench_True_detrm_False_ep_10.pth"
-#     model.load_state_dict(torch.load(path))
-#
-#     # Test with batch of images
-#     # testBatch()
-#     # Test how the classes performed
-#     # testClassess()
-#
-#     # Conversion to ONNX
-#     Convert_ONNX(model, (33, 128, 1, 32))
-#     # Convert_ONNX(model,(32,1,128,33))

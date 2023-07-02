@@ -31,13 +31,13 @@ class ResBlock(nn.Module):
 class BottleneckBlock(nn.Module):
     def __init__(self, num_channels: int):
         super().__init__()
-        self.act = nn.LeakyReLU(0.2)
-
-        self.conv0 = nn.Conv2d(num_channels, num_channels // 4, kernel_size=1, padding=0)
-        self.norm0 = nn.BatchNorm2d(num_channels // 4)
-        self.conv1 = nn.Conv2d(num_channels // 4, num_channels // 4, kernel_size=3, padding=1)
-        self.norm1 = nn.BatchNorm2d(num_channels // 4)
-        self.conv2 = nn.Conv2d(num_channels // 4, num_channels, kernel_size=1, padding=0)
+        self.act = nn.GELU()#nn.LeakyReLU(0.2, inplace=True)
+        self.n = 4
+        self.conv0 = nn.Conv2d(num_channels, num_channels // self.n, kernel_size=1, padding=0)
+        self.norm0 = nn.BatchNorm2d(num_channels // self.n)
+        self.conv1 = nn.Conv2d(num_channels // self.n, num_channels // self.n, kernel_size=3, padding=1)
+        self.norm1 = nn.BatchNorm2d(num_channels // self.n)
+        self.conv2 = nn.Conv2d(num_channels // self.n, num_channels, kernel_size=1, padding=0)
 
     def forward(self, x):
         out = self.conv0(x)
@@ -48,7 +48,7 @@ class BottleneckBlock(nn.Module):
         out = self.act(out)
         out = self.conv2(out)
 
-        return x + out  # self.act(x + out)
+        return self.act(x + out)
 
 
 class ResTruck(nn.Module):
@@ -72,19 +72,19 @@ class ResTruck(nn.Module):
         return self.truck(x)
 
 
-class PsevdoResNet(nn.Module):
+class PsevdoResNet_2(nn.Module):
     def __init__(self,
                  in_channels: int = 1,
                  num_channels: int = 128,
                  out_channels: int = 33,
                  block_type: str = 'bottleneck',
-                 stride: int = 2,
+                 stride: int = 1,
                  padding: int = 1):
         super().__init__()
 
         self.conv0 = nn.Conv2d(in_channels, num_channels, kernel_size=3, stride=stride)
         # self.norm
-        self.act = nn.LeakyReLU(0.2, inplace=True)
+        self.act = nn.GELU()#nn.LeakyReLU(0.2, inplace=True)
         self.maxpool = nn.MaxPool2d(2, 2)
 
         self.layer1 = ResTruck(num_channels, 3, block_type=block_type)
@@ -116,7 +116,6 @@ class PsevdoResNet(nn.Module):
         out = self.linear(out)
 
         return out
-
 
 # if __name__ == '__main__':
 #     from utils.visualization_model_arch import Convert_ONNX
